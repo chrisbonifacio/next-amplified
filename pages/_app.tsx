@@ -5,6 +5,8 @@ import { Amplify } from "aws-amplify";
 import awsConfig from "../src/aws-exports";
 import { useEffect } from "react";
 
+//redeploy
+
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const isLocalhost = Boolean(

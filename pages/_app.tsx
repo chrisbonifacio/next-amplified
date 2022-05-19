@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       },
     };
 
-    Amplify.configure({ ...updatedAwsConfig, ssr: true });
+    Amplify.configure(updatedAwsConfig);
   });
 
   return <Component {...pageProps} />;

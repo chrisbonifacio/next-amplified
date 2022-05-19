@@ -1,0 +1,67 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "datastoreappb96afe85_identitypool_b96afe85",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "datastb96afe85",
+    "userPoolName": "datastoreappb96afe85_userpool_b96afe85",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "email"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "datastb96afe85_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "b96afe85",
+    "resourceName": "datastoreappb96afe85",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "defaultSocial",
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": [],
+    "hostedUI": true,
+    "hostedUIDomainName": "datastoreappe7bd283f-e7bd283f",
+    "authProvidersUserPool": [
+      "Facebook"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"id\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
+    "authProviders": []
+  }
+}

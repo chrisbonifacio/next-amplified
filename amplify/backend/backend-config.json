@@ -1,0 +1,56 @@
+{
+  "auth": {
+    "datastoreappb96afe85": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [
+          "FACEBOOK"
+        ],
+        "usernameAttributes": [],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      }
+    }
+  },
+  "api": {
+    "datastoreapp": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "datastoreappb96afe85",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authdatastoreappb96afe85"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    }
+  }
+}

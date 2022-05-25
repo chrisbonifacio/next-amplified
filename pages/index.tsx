@@ -1,60 +1,77 @@
 import { useEffect, useState } from "react";
-import { Auth, DataStore, Hub } from "aws-amplify";
-import { Todo } from "../src/models";
+import { Auth, Hub } from "aws-amplify";
 import type { NextPage } from "next";
-import { Authenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+import { getUpdatedAWSConfig } from "../utils/getUpdatedAWSConfig";
 
-const Home = () => {
-  const [stateUser, setStateUser] = useState(null);
+const Home: NextPage = () => {
+  const { user } = useAuthenticator();
 
   useEffect(() => {
-    const listener = async (capsule: any) => {
-      console.log(capsule);
-      if (!localStorage.getItem("facebook_session"))
-        if (capsule.payload.event === "signIn") {
-          const authUser = await Auth.currentAuthenticatedUser();
-          localStorage.setItem("facebook_session", JSON.stringify(authUser));
-          setStateUser(authUser);
-        }
+    const handleLoginError = (error: any) => {
+      localStorage.setItem(
+        "facebook_session",
+        JSON.stringify({ type: "ERROR", response: error })
+      );
+      window.close();
+    };
+
+    let cognitoCacheCleared = localStorage.getItem("cognito_cache_cleared");
+    if (cognitoCacheCleared) {
+      localStorage.removeItem("cognito_cache_cleared");
+      window.close();
+      return;
+    }
+
+    const listener = async ({ payload }: any) => {
+      switch (payload.event) {
+        case "signIn":
+          //setting facebook_session here as Auth.currentAuthenticationUser not returning correct info some times
+          Auth.currentAuthenticatedUser()
+            .then(async (session) => {
+              localStorage.setItem(
+                "facebook_session",
+                JSON.stringify({ type: "SUCCESS", response: session })
+              );
+              localStorage.setItem("cognito_cache_cleared", "true");
+              window.location.href =
+                getUpdatedAWSConfig().oauth.redirectSignOut;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+        case "signIn_failure":
+          handleLoginError(payload?.data?.message);
+          break;
+
+        case "signOut":
+          break;
+
+        default:
+          break;
+      }
     };
 
     Hub.listen("auth", listener);
 
-    return () => Hub.remove("auth", listener);
-  }, [stateUser]);
+    return () => {
+      Hub.remove("auth", listener);
+    };
+  }, []);
+
+  const signOutAndClearLocalStorage = async () => {
+    await Auth.signOut();
+    localStorage.removeItem("facebook_session");
+    window.location.href = window.location.origin + "/login";
+  };
 
   return (
-    <Authenticator>
-      {({ user, signOut }) => {
-        const signOutAndClearLocalStorage = async () => {
-          signOut && (await signOut());
-          localStorage.removeItem("facebook_session");
-        };
-
-        return (
-          <div>
-            <h1>Welcome, {user?.getUsername()}</h1>
-            <button onClick={signOutAndClearLocalStorage}>Sign Out</button>
-
-            {localStorage.getItem("facebook_session") ? (
-              <div>
-                Got user from localStorage:{" "}
-                <pre>
-                  {JSON.stringify(
-                    localStorage.getItem("facebook_session"),
-                    null,
-                    2
-                  )}
-                </pre>
-              </div>
-            ) : (
-              <div>Loading</div>
-            )}
-          </div>
-        );
-      }}
-    </Authenticator>
+    <div>
+      <h1>Welcome, {user?.getUsername()}</h1>
+      <button onClick={signOutAndClearLocalStorage}>Sign Out</button>
+    </div>
   );
 };
 

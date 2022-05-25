@@ -4,10 +4,11 @@ import { schema } from './schema';
 
 
 
-const { Profile, History, Todo } = initSchema(schema);
+const { Profile, History, Todo, Post } = initSchema(schema);
 
 export {
   Profile,
   History,
-  Todo
+  Todo,
+  Post
 };

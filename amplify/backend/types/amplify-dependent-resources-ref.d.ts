@@ -14,6 +14,7 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "api": {
         "datastoreapp": {
+            "GraphQLAPIKeyOutput": "string",
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }

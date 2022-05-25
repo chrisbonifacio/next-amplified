@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "datastoreapp",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/Users/cbonifacio/Documents/work/datastore-app/amplify/backend/api/datastoreapp/schema.graphql",
+    "gqlSchemaPath": "/Users/cbonifacio/Documents/work/next-amplified/amplify/backend/api/datastoreapp/schema.graphql",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
       "cognitoUserPoolId": "authdatastoreappb96afe85"
@@ -12,6 +12,14 @@
       "defaultResolutionStrategy": {
         "type": "AUTOMERGE"
       }
-    }
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 7,
+        "apiKeyExpirationDate": "2022-05-31T20:24:51.192Z",
+        "keyDescription": ""
+      }
+    ]
   }
 }

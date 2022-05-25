@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Auth, Hub } from "aws-amplify";
 import type { NextPage } from "next";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import "@aws-amplify/ui-react/styles.css";
 import { getUpdatedAWSConfig } from "../utils/getUpdatedAWSConfig";
+
+import "@aws-amplify/ui-react/styles.css";
 
 const Home: NextPage = () => {
   const [facebookSession, setFacebookSession] = useState<any>(null);
@@ -70,7 +71,7 @@ const Home: NextPage = () => {
   const signOutAndClearLocalStorage = async () => {
     await Auth.signOut();
     localStorage.clear();
-    window.location.href = window.location.origin + "/login";
+    window.location.href = getUpdatedAWSConfig().oauth.redirectSignIn;
   };
 
   return (

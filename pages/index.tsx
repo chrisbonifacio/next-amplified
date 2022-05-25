@@ -6,9 +6,21 @@ import "@aws-amplify/ui-react/styles.css";
 import { getUpdatedAWSConfig } from "../utils/getUpdatedAWSConfig";
 
 const Home: NextPage = () => {
+  const [facebookSession, setFacebookSession] = useState<any>(null);
   const { user } = useAuthenticator();
 
   useEffect(() => {
+    let facebookSession = localStorage.getItem("facebook_session");
+    if (facebookSession) {
+      setFacebookSession(JSON.stringify(JSON.parse(facebookSession), null, 2));
+    }
+    let cognitoCacheCleared = localStorage.getItem("cognito_cache_cleared");
+    if (cognitoCacheCleared) {
+      localStorage.removeItem("cognito_cache_cleared");
+      window.close();
+      return;
+    }
+
     const handleLoginError = (error: any) => {
       localStorage.setItem(
         "facebook_session",
@@ -16,13 +28,6 @@ const Home: NextPage = () => {
       );
       window.close();
     };
-
-    let cognitoCacheCleared = localStorage.getItem("cognito_cache_cleared");
-    if (cognitoCacheCleared) {
-      localStorage.removeItem("cognito_cache_cleared");
-      window.close();
-      return;
-    }
 
     const listener = async ({ payload }: any) => {
       switch (payload.event) {
@@ -34,6 +39,7 @@ const Home: NextPage = () => {
                 "facebook_session",
                 JSON.stringify({ type: "SUCCESS", response: session })
               );
+
               localStorage.setItem("cognito_cache_cleared", "true");
               window.location.href =
                 getUpdatedAWSConfig().oauth.redirectSignOut;
@@ -63,7 +69,7 @@ const Home: NextPage = () => {
 
   const signOutAndClearLocalStorage = async () => {
     await Auth.signOut();
-    localStorage.removeItem("facebook_session");
+    localStorage.clear();
     window.location.href = window.location.origin + "/login";
   };
 
@@ -71,6 +77,11 @@ const Home: NextPage = () => {
     <div>
       <h1>Welcome, {user?.getUsername()}</h1>
       <button onClick={signOutAndClearLocalStorage}>Sign Out</button>
+
+      <div>
+        <h2>Facebook Session from Local Storage</h2>
+        <pre>{facebookSession}</pre>
+      </div>
     </div>
   );
 };
